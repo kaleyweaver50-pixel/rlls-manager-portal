@@ -538,9 +538,9 @@
             let accountSetupText = "";
             if (type === 'orientation') {
                 if (c.assignedCounty !== 'network180') {
-                    accountSetupText = `Manager Note: You MUST create their account on Improving MI Practices first before sending this email!\n\nI have created your account for Improving MI Practices.\nUsername: ${email}\nTemporary Password: Reallife2026!\n\n`;
+                    accountSetupText = `[MANAGER NOTE: You MUST create their account on Improving MI Practices first! Delete this note before sending.]\nImproving MI Practices Account Access:\nUsername: ${email}\nTemporary Password: Reallife2026!\n`;
                 } else {
-                    accountSetupText = `I have created your account for Lakeshore LMS.\nUsername: ${email}\nTemporary Password: RLLS1111\n\n`;
+                    accountSetupText = `Lakeshore LMS Account Access:\nUsername: ${email}\nTemporary Password: RLLS1111\n`;
                 }
             }
             
@@ -549,16 +549,16 @@
 
             if (type === 'orientation') {
                 subjectText = `Orientation Invitation - ${c.name}`;
-                introText = `Welcome to RLLS! I am ${manager}, and your initial mandatory training assignments for ${countyNameDisplay} are now ready.`;
+                introText = `Dear ${c.name},\nWelcome to Real Life Living Services. As part of your onboarding, you are required to complete our digital new hire orientation. This portal will guide you through our core company policies, daily operational systems, and mandatory safety certifications. Your initial training assignments for ${countyNameDisplay} are now ready.`;
             } else if (type === 'All Incomplete Trainings') {
                 subjectText = `Master Training List Required - ${c.name}`;
-                introText = `Hello ${c.name},\n\nBelow is a master list of all remaining mandatory training assignments for ${countyNameDisplay} that still need to be completed.`;
+                introText = `Dear ${c.name},\nPlease review the master list below of all remaining mandatory training assignments for ${countyNameDisplay} that require your immediate completion.`;
             } else {
                 subjectText = `URGENT: ${type} & Trainings Needed - ${c.name}`;
-                introText = `Hello ${c.name},\n\nI am following up regarding your mandatory training assignments for ${countyNameDisplay} that are currently due or past due for your ${type}.`;
+                introText = `Dear ${c.name},\nThis is a formal follow-up regarding your mandatory training assignments for ${countyNameDisplay} that are currently due or past due for your ${type}.`;
             }
             
-            fullEmailText = `TO: ${email}\nCC: Staff@rlls.org\nSUBJECT: ${subjectText}\n\n${introText}\n\n${accountSetupText}Dashboard Instructions:\n1. Go to your Staff Welcome Dashboard (Attached).\n2. Scroll down to 'Step 5: Your Training Roadmap'. Click the dropdown menu and select "${countyNameDisplay}".\n\nThis will reveal your specific deadlines, login instructions, and the links needed to complete the following assigned topics:\n\n${trainingList}\n\nPlease let me know if you have any questions!\n\nSincerely,\n\n${manager}\nReal Life Living Services`;
+            fullEmailText = `TO: ${email}\nCC: Staff@rlls.org\nSUBJECT: ${subjectText}\n\n${introText}\n\n${accountSetupText}\nInstructions to Access Your Dashboard:\n1. Navigate to the Staff Welcome Dashboard: https://rlls-portal.onrender.com\n2. Scroll down to 'Step 5: Your Training Roadmap', click the dropdown menu, and select "${countyNameDisplay}".\nThis will reveal your specific deadlines, login instructions, and the links needed to complete the following assigned topics:\n${trainingList}\n\nPlease contact me directly if you have any questions regarding your orientation requirements.\n\nSincerely,\n${manager}\nReal Life Living Services`;
         } 
         else if (type === 'explanation') {
             fullEmailText = `TO: [Candidate Email]\nSUBJECT: URGENT: Employment Action Required - ${c.name}\n\nDear ${c.name},\n\nWe are writing you this letter to express the urgency of a few issues that must be addressed prior to your employment beginning.\n\nRegarding your driving record, you must provide an original, signed document from the Secretary of State regarding the current status of your Michigan Driver’s License. Regarding your criminal history, you must provide a detailed explanation of the criminal history findings and why you are rehabilitated.\n\nPlease note that your conditional job offer is contingent upon the satisfactory completion and approval of all requested materials for your personnel file. Thank you for your prompt attention to this matter.\n\nSincerely,\n\n${manager}\nReal Life Living Services`;
