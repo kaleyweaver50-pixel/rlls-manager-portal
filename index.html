@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RLLS Manager Master Onboarding Portal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+        :root {
+            /* RLLS Brand Palette */
+            --brand-red: #D32F2F;
+            --brand-orange: #F26419;
+            --brand-yellow: #FFC107;
+            --brand-yellow-light: #FFF8E1;
+            --brand-green: #2E7D32;
+            
+            /* UI Colors */
+            --bg-body: #FCF9F5; 
+            --bg-card: #FFFFFF;
+            --text-main: #3E2723; 
+            --text-muted: #6D4C41;
+            --border-soft: #F0E6D2;
+        }
+
+        body { 
+            font-family: 'Nunito', 'Segoe UI', Arial, sans-serif; 
+            background: var(--bg-body); 
+            color: var(--text-main); 
+            margin: 0; 
+            padding: 30px 20px; 
+        }
+
+        .container { 
+            max-width: 1650px; 
+            margin: auto; 
+            background: var(--bg-card); 
+            border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(62, 39, 35, 0.08); 
+            overflow: hidden;
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, rgba(211,47,47,0.05) 0%, rgba(242,100,25,0.08) 100%);
+            border-bottom: 4px solid var(--brand-yellow);
+            padding: 25px 30px;
+        }
+
+        .flex-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+
+        h1 { 
+            color: var(--brand-red); 
+            margin: 0; 
+            font-size: 2rem; 
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-actions { display: flex; align-items: center; gap: 15px; }
+
+        .portal-content { padding: 30px; }
+
+        .intro-box { 
+            background: #FFF3E0; 
+            border-left: 5px solid var(--brand-orange); 
+            padding: 18px; 
+            margin-bottom: 25px; 
+            font-style: italic; 
+            font-size: 0.95rem; 
+            border-radius: 0 8px 8px 0;
+            color: var(--text-muted);
+        }
+
+        .warning-box { 
+            background: var(--brand-yellow-light); 
+            color: #D84315; 
+            padding: 10px 15px; 
+            border-radius: 6px; 
+            font-weight: 700; 
+            display: inline-block; 
+            margin-top: 12px; 
+            border: 1px solid #FFE082; 
+        }
+
+        .add-candidate-box { 
+            background: #FAFAFA; 
+            padding: 25px; 
+            border-radius: 12px; 
+            border: 1px solid var(--border-soft); 
+            margin-bottom: 30px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .input-group { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; margin-top: 15px; }
+        .input-group input, .input-group select { 
+            padding: 12px 15px; 
+            border: 1px solid #D7CCC8; 
+            border-radius: 8px; 
+            flex: 1; 
+            min-width: 200px; 
+            font-size: 0.95rem;
+            font-family: inherit;
+            color: var(--text-main);
+            transition: border-color 0.3s;
+        }
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--brand-orange);
+            box-shadow: 0 0 0 3px rgba(242, 100, 25, 0.1);
+        }
+        
+        table { width: 100%; border-collapse: separate; border-spacing: 0; background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-soft); }
+        th, td { text-align: left; padding: 18px; border-bottom: 1px solid var(--border-soft); vertical-align: top; }
+        th { 
+            background: linear-gradient(90deg, var(--brand-red), var(--brand-orange)); 
+            color: white; 
+            text-transform: uppercase; 
+            font-size: 0.85rem; 
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background-color: #FFFAFA; }
+
+        .progress-container { width: 100%; background-color: #EFEBE9; border-radius: 20px; height: 10px; margin-top: 12px; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);}
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--brand-yellow), var(--brand-orange)); border-radius: 20px; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        .btn { 
+            display: inline-block; 
+            padding: 10px 16px; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 700; 
+            font-family: inherit;
+            transition: all 0.2s ease; 
+            margin: 3px 2px; 
+            font-size: 0.85rem; 
+            text-align: center; 
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .btn:active { transform: translateY(0); }
+        
+        .btn-next { background: linear-gradient(135deg, var(--brand-orange), var(--brand-red)); color: white; }
+        .btn-followup { background: #8D6E63; color: white; }
+        .btn-onboard { background: var(--brand-orange); color: white; }
+        .btn-sync { background: var(--brand-green); color: white; }
+        .btn-clean { background: var(--brand-green); color: white; border: 2px solid #1B5E20; }
+        .btn-record { background: white; color: var(--brand-red); border: 2px solid var(--brand-red); }
+        .btn-record:hover { background: var(--brand-red); color: white; }
+        .btn-axiscare { background: var(--text-main); color: white; width: 100%; margin-bottom: 8px; }
+        .btn-delete { background: #FFEBEE; color: var(--brand-red); font-size: 0.8rem; border: 1px solid #FFCDD2; }
+        .btn-delete:hover { background: var(--brand-red); color: white; }
+        .btn-undo { background: #F5F5F5; color: var(--text-muted); font-size: 0.8rem; border: 1px solid #E0E0E0; }
+        .btn-clear { background: var(--text-main); color: white; width: 100%; margin-top: 50px; padding: 15px; font-size: 1rem; }
+        .btn-save { background: var(--brand-yellow); color: var(--text-main); padding: 10px 20px; font-size: 1rem; box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3); border: 1px solid #FFA000; }
+
+        .script-box { 
+            background: var(--brand-yellow-light); 
+            padding: 18px; 
+            border-left: 5px solid var(--brand-yellow); 
+            font-size: 0.9rem; 
+            min-width: 480px; 
+            line-height: 1.6; 
+            white-space: pre-wrap; 
+            color: var(--text-main); 
+            border-radius: 8px; 
+            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.15); 
+        }
+        .script-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #FFE082; padding-bottom: 10px; margin-bottom: 12px; }
+        .copy-btn { background: var(--brand-yellow); border: none; padding: 6px 12px; border-radius: 4px; font-weight: 800; cursor: pointer; font-size: 0.75rem; color: var(--text-main); transition: 0.2s; }
+        .copy-btn:hover { background: #FFB300; }
+        .attempt-badge { background: var(--brand-orange); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 800; }
+        
+        .status-tag { font-size: 0.8rem; font-weight: 700; background: #FFF3E0; padding: 8px 12px; border-radius: 6px; margin-top: 10px; display: inline-block; border: 1px solid #FFE0B2; color: #E65100; }
+        
+        .compliance-hub { background: #FFEBEE; border: 1px solid #FFCDD2; padding: 18px; border-radius: 10px; margin-top: 12px; }
+        .comp-link { color: var(--brand-red); text-decoration: none; display: inline-block; margin: 4px 8px 4px 0; font-size: 0.85rem; font-weight: 800; padding: 4px 8px; background: white; border-radius: 4px; border: 1px solid #FFCDD2; transition: 0.2s; }
+        .comp-link:hover { background: var(--brand-red); color: white; }
+        
+        .training-assignment-box { background: #FFFFFF; border: 2px solid var(--brand-yellow); padding: 18px; border-radius: 10px; margin-top: 15px; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .axiscare-tracker { background: #FFFDF9; border: 2px solid var(--brand-orange); padding: 20px; border-radius: 10px; margin-top: 15px; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(242, 100, 25, 0.05); }
+        
+        .training-list { list-style: none; padding: 0; margin: 15px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .training-list li { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+        
+        .tracker-list { list-style: none; padding: 0; margin: 15px 0; }
+        .tracker-list li { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 0.85rem; background: #fff; padding: 12px; margin-bottom: 8px; border-radius: 6px; border: 1px solid #E0E0E0; transition: border-color 0.2s; }
+        .tracker-list li:hover { border-color: var(--brand-orange); }
+        .date-input { border: 1px solid #D7CCC8; border-radius: 6px; padding: 6px 10px; font-size: 0.8rem; font-family: inherit; color: var(--text-main); }
+        
+        .ptw-badge { background: var(--brand-red); color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; margin-left: 8px; white-space: nowrap; box-shadow: 0 2px 4px rgba(211,47,47,0.3); }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(62, 39, 35, 0.8); z-index: 1000; backdrop-filter: blur(4px); }
+        .modal-content { background: white; width: 85%; max-width: 800px; margin: 40px auto; padding: 40px; border-radius: 16px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .modal-sm { max-width: 450px; text-align: center; }
+        .email-textarea { width: 100%; height: 350px; padding: 20px; font-family: monospace; font-size: 0.95rem; border: 2px solid #EFEBE9; border-radius: 8px; margin-bottom: 20px; resize: vertical; color: var(--text-main); background: #FAFAFA; }
+        .email-textarea:focus { outline: none; border-color: var(--brand-orange); }
+        .custom-input { width: 100%; padding: 15px; margin: 20px 0; border: 2px solid #EFEBE9; border-radius: 8px; font-size: 1.1rem; text-align: center; font-family: inherit; }
+        .custom-input:focus { outline: none; border-color: var(--brand-orange); }
+
+        input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--brand-orange); cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-banner">
+        <div class="flex-header">
+            <div>
+                <h1>🦋 Real Life Living Services 🌻</h1>
+                <p style="margin: 5px 0 0 0; color: var(--brand-orange); font-weight: 800; font-size: 1.15rem; letter-spacing: 0.5px;">Manager Master Onboarding Portal</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-save" onclick="save()"><i class="fas fa-save"></i> Save Progress</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="portal-content">
+        <div class="intro-box">
+            <strong>The Non-Negotiable Process:</strong> Building your caseload means hiring your own direct staff. This is a huge responsibility. You MUST follow this order. It is designed to weed out candidates who aren't a good fit before you spend time on an application or full interview.<br>
+            <div class="warning-box"><i class="fas fa-exclamation-triangle"></i> Manager Warning: If they hesitate on the weekend requirement or driving in Step 2, they are NOT a fit. Stop the funnel here and move to Inactive.</div>
+        </div>
+
+        <div class="add-candidate-box">
+            <h3 style="margin: 0 0 10px 0; color: var(--brand-red); font-size:1.25rem; font-weight:800;"><i class="fas fa-user-plus"></i> Step 0: Add New Applicant</h3>
+            <div class="input-group">
+                <input type="text" id="candName" placeholder="Candidate Full Name">
+                <select id="candSource">
+                    <option value="Indeed">Indeed</option>
+                    <option value="Facebook">Facebook</option>
+                    <option value="Job Fair">Job Fair</option>
+                    <option value="Direct/Text">Direct Text</option>
+                </select>
+                <input type="text" id="activeManager" value="Kaley Weaver" placeholder="Manager Logged In">
+                <button class="btn btn-next" style="padding: 12px 25px; font-size: 1rem;" onclick="addCandidate()">+ Add to Funnel</button>
+            </div>
+        </div>
+
+        <table id="master-table">
+            <thead>
+                <tr>
+                    <th>Candidate / Status</th>
+                    <th>Phase</th>
+                    <th>Persistence Script (Copy/Paste)</th>
+                    <th>Automation Actions</th>
+                    <th style="text-align: center;">Trash</th>
+                </tr>
+            </thead>
+            <tbody id="tracker-body"></tbody>
+        </table>
+        <button class="btn btn-clear" onclick="openCustomConfirm('⚠️ Clear ALL Portal Data? This cannot be undone.', clearAllDataCallback)"><i class="fas fa-trash-alt"></i> CLEAR ALL PORTAL DATA</button>
+    </div>
+</div>
+
+<!-- Modals -->
+<div id="alert-modal" class="modal-overlay">
+    <div class="modal-content modal-sm">
+        <h3 id="alert-message" style="color: var(--brand-red); margin-top: 0; line-height: 1.5;"></h3>
+        <button class="btn btn-next" style="margin-top: 25px; width: 100%; padding: 14px; font-size: 1.05rem;" onclick="closeModal('alert-modal')">Got It</button>
+    </div>
+</div>
+
+<div id="confirm-modal" class="modal-overlay">
+    <div class="modal-content modal-sm">
+        <h3 id="confirm-message" style="color: var(--brand-red); margin-top: 0; line-height: 1.5;"></h3>
+        <div style="display: flex; gap: 15px; margin-top: 25px;">
+            <button class="btn btn-delete" id="confirm-yes-btn" style="flex: 1; padding: 14px; font-weight: 800;">Yes, Do it</button>
+            <button class="btn btn-followup" onclick="closeModal('confirm-modal')" style="flex: 1; padding: 14px;">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div id="prompt-modal" class="modal-overlay">
+    <div class="modal-content modal-sm">
+        <h3 id="prompt-title" style="color: var(--brand-red); margin-top: 0;"></h3>
+        <p id="prompt-subtitle" style="font-size: 0.95rem; color: var(--text-muted);"></p>
+        <input type="text" id="prompt-input" class="custom-input">
+        <div style="display: flex; gap: 15px; margin-top: 15px;">
+            <button class="btn btn-sync" id="prompt-submit-btn" style="flex: 1; padding: 14px;">Submit</button>
+            <button class="btn btn-followup" onclick="closeModal('prompt-modal')" style="flex: 1; padding: 14px;">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div id="welcome-modal-overlay" class="modal-overlay">
+    <div class="modal-content">
+        <h2 style="color: var(--brand-red); font-size:1.8rem; font-weight:800; margin-top:0;">Welcome Letter for New Hires</h2>
+        <div id="letter-body" style="white-space: pre-wrap; padding: 25px; font-size: 1rem; line-height: 1.6; background: #FAFAFA; border: 2px solid #EFEBE9; border-radius: 8px; color: var(--text-main);"></div>
+        <div style="margin-top:25px; display: flex; gap: 15px;">
+            <button class="btn btn-next" style="padding: 14px; flex: 2; font-size: 1.05rem;" onclick="confirmADP()">Confirm Sent & Open ADP</button>
+            <button class="btn btn-followup" style="padding: 14px; flex: 1;" onclick="closeModal('welcome-modal-overlay')">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div id="email-modal-overlay" class="modal-overlay">
+    <div class="modal-content">
+        <h2 style="color: var(--brand-orange); font-size:1.8rem; font-weight:800; margin-top:0;">Roundcube Email Generator</h2>
+        <p style="font-size: 0.95rem; color: var(--text-muted);">Review the generated email below. Click the green button to try copying, or simply highlight the text, right-click, and select "Copy".</p>
+        <textarea id="email-textarea" class="email-textarea" readonly></textarea>
+        <div style="margin-top:15px; display: flex; gap: 15px;">
+            <button class="btn btn-clean" style="padding: 14px; flex: 2; font-size: 1.05rem;" onclick="executeFailsafeCopy()"><i class="fas fa-copy"></i> Copy Text to Clipboard</button>
+            <button class="btn btn-followup" style="padding: 14px; flex: 1;" onclick="closeModal('email-modal-overlay')">Close Window</button>
+        </div>
+    </div>
+</div>
+
+<div id="record-modal-overlay" class="modal-overlay">
+    <div class="modal-content" style="border-top: 8px solid var(--brand-red);">
+        <h2 style="color: var(--brand-red); margin-top: 0; font-size:1.8rem; font-weight:800;"><i class="fas fa-shield-alt"></i> Criminal Record Clearance Protocol</h2>
+        <p style="font-size: 1rem; color: var(--text-main); line-height: 1.6;">If a hit has returned on a background check, it MUST be cleared by <b style="color: var(--brand-red);">Bwoodside@rlls.org</b> and <b style="color: var(--brand-red);">Kaley@rlls.org</b> before proceeding. Follow these exact steps:</p>
+        
+        <ol style="line-height: 1.8; font-size: 0.95rem; background: #FFF3E0; padding: 25px 45px; border-radius: 8px; border: 1px solid #FFE0B2; color:var(--text-main);">
+            <li><strong>Review the conviction:</strong> Search <code>LEGAL GUIDE 5-23-06.doc</code> to check timeframe eligibility.</li>
+            <li style="margin-top: 15px;"><strong>Request Explanation from Candidate:</strong> Send the formal letter requesting an explanation of their criminal history.
+                <br><button class="btn btn-onboard" style="margin-top:8px; padding: 10px 15px;" onclick="generateEmail(currentId, 'explanation')"><i class="fas fa-envelope"></i> Copy Candidate Explanation Request</button>
+            </li>
+            <li style="margin-top: 15px;"><strong>Get Final Approval:</strong> Forward their explanation AND the ICHAT PDF document to Ben and Kaley for approval.
+                <br><button class="btn btn-sync" style="margin-top:8px; padding: 10px 15px;" onclick="generateEmail(currentId, 'approval')"><i class="fas fa-envelope"></i> Copy Ben & Kaley Approval Request</button>
+            </li>
+            <li style="margin-top: 15px;"><strong>Make a Decision:</strong>
+                <ul style="margin-top: 8px; list-style-type: square; padding-left: 20px;">
+                    <li>If <strong style="color:var(--brand-green);">APPROVED</strong>: Close this window and click the green "Clean Background" button on the tracker to assign trainings.</li>
+                    <li style="margin-top: 8px;">If <strong style="color:var(--brand-red);">REJECTED</strong>: Send the official rescinded offer letter, then move to Trash/Inactive.
+                        <br><button class="btn btn-delete" style="margin-top:8px; padding: 10px 15px;" onclick="generateEmail(currentId, 'rejection')"><i class="fas fa-envelope"></i> Copy Rejection Letter</button>
+                    </li>
+                </ul>
+            </li>
+        </ol>
+        <div style="margin-top:25px; text-align: right;">
+            <button class="btn btn-followup" style="padding: 12px 25px; font-size: 1rem;" onclick="closeModal('record-modal-overlay')">Close Window</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // UPDATED TRAINING MATRICES FROM MASTER LISTS
+    const trainingTemplates = {
+        barry: ["TB TEST - Within 30 days of hire or Prior to working", "Corporate Compliance (Mi-Practices) - Within 30 days of hire", "Cultural Diversity Training (Mi-Practices) - Within 6 Months of hire", "HIPPA (Mi-Practices) - Within 30 days of hire", "Recipient Rights - Within 30 days of hire", "CPR / First Aid - Within 30 days of hire", "Limited English Proficiency (Mi-Practices) - Within 6 Months of hire", "Person Center Planning (Mi-Practice) - Within 60 days of hire", "Emergency Procedures (Mi-Practice) - Within 60 days of hire", "Blood Borne Pathogens (Mi-Practices) - Within 30 days of hire", "Trauma Informed Systems of Care (Mi-Practices) - Within 60 days of hire"],
+        
+        nlcmh: ["TB TEST - Within 30 days of hire or Prior to working", "Corporate Compliance (Mi-Practices) - Within 1 year of hire (Annual)", "Cultural Diversity Training (Mi-Practices) - Within 6 Months of hire (Annual)", "HIPPA (Mi-Practices) - Within 30 days of hire (Annual)", "Recipient Rights - Within 30 days of hire (Annual)", "CPR / First Aid - Within 30 days of hire (2 Year Recertification)", "Limited English Proficiency (Mi-Practices) - Within 90 days of hire (Annual)", "Person Center Planning (Mi-Practice) /IPOS Training - Within 30 days of hire (Annual/Ongoing)", "Emergency Procedures (Mi-Practice) - Within 90 days of hire (Every 3 Years)", "Blood Borne Pathogens (Mi-Practices) - Within 30 days of hire (Annual)", "Trauma Informed Systems of Care (Mi-Practices) - Within 60 days of hire", "Grievance & Appeals (NLCMHA Website- PowerPoint) - Within 90 days of hire (Annual)", "Compliance/NLCMHA Policy HIPPA (NLCMHA Website- PowerPoint) - Within 7 days of hire (Annual)", "Culture of Gentleness (NLCMHA Website- PowerPoint) - Within 60 days of hire (Annual)", "Working with People Part 1 & 2 Introduction, and Proactive Strategies (NLCMHA Website Read/Review/Test) - Within 90 days of Hire (3 Year refresher)"],
+        
+        network180: ["TB TEST - Within 30 days of hire or Prior to working", "Corporate Compliance (Lakeshore LMS) - Within 60 Days of Hire (Annual)", "Cultural Competence (Lakeshore LMS) - Within 60 Days of Hire (Annual)", "Emergency Preparedness (Lakeshore LMS) - Within 60 Days of Hire (Ongoing/Annual)", "CPR / First Aid - Within 60 Days of Hire (2-Year)", "Grievance & Appeals (Lakeshore LMS) - Within 30 Days of Hire (Annual) Or prior to working w/ Indv. (Annual)", "HCBS Provider Training Module (Lakeshore LMS) - Within 60 Days of Hire (Annual)", "HIPPA (Lakeshore LMS) - Within 60 Days of Hire (Annual)", "Limited English Proficiency (Lakeshore LMS) - Within 60 Days of Hire (Annual)", "Medication Series (Lakeshore LMS/Classroom) - Prior to working - Within 60 Days of Hire (Annual)", "Person-Centered planning & Self-Determination (Lakeshore LMS) - Within 60 Days of Hire (Annual)", "Recipient Rights - Within 30 days of hire (Annual)", "Standard Precautions (Lakeshore LMS) - Prior to working with indv.", "Trauma Informed Care - Within 6 Months of hire (Annual/Ongoing)"],
+        
+        waiver: ["TB Test - Within 30 days of hire or Prior to working", "Reference Checks Completed - At the time of Hire", "Person-Centered Planning Process with Children, Adults and Families (Mi Practices) - Prior to working with indv.", "The Foundations of Self-Determination (MI Practices) - 30 Days of Hire", "Plan of Care/IPOS - Prior to working with indv(s) (Ongoing)", "CPR / First Aid - Within 60 Days of Hire (2-Year)", "HIPPA Essentials (MI Practice) - Prior to working with indv(s)", "Infection Control & Standard Precautions (Mi Practices) - 30 Days of Hire (Annual)", "Infection Control for Direct Care Workers (MI Practices) - 30 Days of Hire (Annual Refresher)", "Cultural Competence (Mi Practices) - Within 60 Days of Hire (Annual)", "Corporate Compliance (Mi Practices) - Within 60 Days of Hire (Annual)", "Limited English Proficiency (Mi Practices) - Within 60 Days of Hire (Annual)", "Emergency Preparedness (MI Practices) - 30 Days of Hire (Annual)", "Dementia, Depression & Delirium (Mi Practices) - 365 Days of Hire (Annual)", "Recipient Rights (Mi Practices) - 180 Days of Hire (Refresher/Annual)", "2 Supervisory Visits by RN - Every 6 Months"]
+    };
+
+    const priorToWorkingMap = {
+        barry: ["TB TEST - Within 30 days of hire or Prior to working"],
+        nlcmh: ["TB TEST - Within 30 days of hire or Prior to working", "Compliance/NLCMHA Policy HIPPA (NLCMHA Website- PowerPoint) - Within 7 days of hire (Annual)"],
+        network180: ["TB TEST - Within 30 days of hire or Prior to working", "Grievance & Appeals (Lakeshore LMS) - Within 30 Days of Hire (Annual) Or prior to working w/ Indv. (Annual)", "Medication Series (Lakeshore LMS/Classroom) - Prior to working - Within 60 Days of Hire (Annual)", "Standard Precautions (Lakeshore LMS) - Prior to working with indv."],
+        waiver: ["TB Test - Within 30 days of hire or Prior to working", "Reference Checks Completed - At the time of Hire", "Person-Centered Planning Process with Children, Adults and Families (Mi Practices) - Prior to working with indv.", "Plan of Care/IPOS - Prior to working with indv(s) (Ongoing)", "HIPPA Essentials (MI Practice) - Prior to working with indv(s)"]
+    };
+
+    const inactiveNoteTemplate = `Inactive File Note Template\nStatus: Inactive – No Response / Failed Gatekeeper\nActivity Log: \n* 1st Attempt: Initial outreach. \n* 2nd Attempt: Follow-up regarding open blocks. \n* 3rd Attempt: Final "Deadline" message sent. \nReason for Inactivity: Applicant failed to respond or meet core requirements. \nRe-Hire Status: Eligible for future consideration.`;
+
+    const funnelSteps = [
+        { name: "Step 1: The Hook", attempts: [
+            "Hey there! 👋 [activeManager] from Real Life Living Services here. Thanks so much for applying to be a Caregiver! We're really impressed and excited to chat more. Just a quick heads-up: I have a few questions before we set up that phone interview. Mind if I ask them now?",
+            "Hey there! 👋 [activeManager] from Real Life Living Services here. \nJust wanted to circle back and say thanks again for applying to be a Caregiver! We're seriously impressed by what we've seen so far and super excited about the possibility of you joining our team. \nWe're eager to get your phone interview scheduled, but first, I've got a few quick questions that will help us get to know you even better and prepare for our chat. Mind if I fire them over now? Let's keep this momentum going!",
+            "Last Call for Your Caregiver Application! \nHey there! 👋 [activeManager] from Real Life Living Services here, reaching out one last time about your Caregiver application. \nWe were really impressed with your interest and what we've seen so far, and we're still eager to potentially get you on board. We've been trying to connect because we have a few essential questions we'd love to ask before we can schedule your phone interview. \nIf you're still interested in joining our team and moving forward, please reply to this message so we can send those questions over! We're excited about the possibility of you joining our mission.",
+            inactiveNoteTemplate
+        ]},
+        { name: "Step 2: Core Questions (Vetting)", attempts: [
+            "1. Awesome, thanks for your interest! Before we grab an email or application, just a quick heads-up: We help people with disabilities live independently at home and in the community. Is this kind of work something you've done before, or are you looking for a new adventure? Let me know!",
+            "2. Great! To help us nail down your schedule: with RLLS, working either a Saturday or a Sunday every other weekend is a MUST for this role. Are you also flexible for short-notice shifts and eager to get going quickly? Let us know!",
+            "3. Reliable wheels: For most of our clients, having your own car, a valid driver's license, and insurance is a MUST. We're also curious if you have any tickets or accidents on your record (just for safety). What's your driving situation look like?",
+            "4. Lastly: Quick question about your criminal record – anything to note there? Also, do you have a recent TB test or CPR/First Aid certification? (If no, no stress at all! We help you get certified).",
+            inactiveNoteTemplate
+        ]},
+        { name: "Step 3: Get The Email", attempts: [
+            "Thanks [Name]! Since you meet our core requirements, let’s get you ready for an interview! To make sure we're totally prepped for your chat with [activeManager], can you send over your best email address? We'll use it to send you the formal application.",
+            "Hey [Name],\nAwesome to hear you're still on board! We're super excited to get you prepped for your chat with [activeManager].\nTo make sure you have everything you need for the interview, can you quickly send over your best email address?",
+            "Ready to Roll, [Name]? Last Call!\nJust circling back one last time! To make sure you're totally prepped and ready to shine for your chat with [activeManager], we just need your best email address! Please send it over as soon as you can so we can get you all set up!",
+            inactiveNoteTemplate
+        ]},
+        { name: "Step 4: App Link", attempts: [
+            "Got It! Check Your Inbox Soon! Awesome, thanks for the email! Keep an eye on your inbox—we're sending over a quick application form. It'll give us a better picture of your awesome skills. If you could have that filled out ASAP, that would be perfect!",
+            "Your Application Awaits [Name]!\nPlease check your inbox because we've just sent over a quick application form. This is your chance to really show off those amazing skills and give us an even better picture of why you'd be a perfect fit. The sooner you can get that filled out, the better!",
+            "Last Chance: Your Application is Waiting, [Name]!\nJust one last friendly nudge! We sent a quick application form to your inbox. This is your final opportunity to complete it, so please fill it out and send it back ASAP if you're still eager to move forward.",
+            inactiveNoteTemplate
+        ]},
+        { name: "Step 5: Booking", attempts: [
+            "Alright, the moment you've been waiting for! 🎉 How soon can you chat with us? And if all goes well, how quickly could you jump in and start working?\n\nYou can pick a time that works best right here:\n👉 Kristyn Daniels: https://calendly.com/kdaniels-rlls\n👉 Christine Bohl: https://calendly.com/cbohl-rlls\n👉 Alex Sodergren: https://calendly.com/asodergren-rlls/virtual-interview\n\n(Once you book, I will give you a quick call to confirm the date and time!)"
+        ]},
+        { name: "Step 6: Interview & Onboarding", attempts: [
+            "Interview Confirmed! Call applicant to confirm. Review candidate file and conduct the formal interview. If hired, move to Next Phase for Onboarding."
+        ]},
+        { name: "Step 7: ADP Paperwork", attempts: [
+            "Monitoring for signatures.", 
+            "The ADP link has been sent, we see you still have not started or there are still missing signatures on documents. A reminder has been sent through ADP.", 
+            "Final Call. 3 reminders sent.",
+            inactiveNoteTemplate
+        ]},
+        { name: "Step 8: COMPLIANCE", attempts: ["Run Background Checks."] },
+        { name: "Step 9: AXISCARE TRACKING", attempts: [
+            "Hey [Name], just checking in to see how your training is going? Let me know if you need any help or if you've uploaded any certificates to your dashboard!",
+            "Friendly reminder! Your training deadlines are approaching. Please make sure you are completing your modules and uploading the certificates to your welcome dashboard.",
+            "Urgent: We need your completed training certificates uploaded before we can schedule you for shifts. Please get those submitted ASAP.",
+            inactiveNoteTemplate
+        ]},
+        { name: "PLACED & CLEARED", attempts: ["Candidate is fully compliant and placed on schedule."] }
+    ];
+
+    let candidates = [];
+    let currentId = null;
+
+    // Load from Local Storage instead of Google Sheets
+    window.onload = function() {
+        console.log("Loading data from local storage...");
+        const savedData = localStorage.getItem('rlls_candidates');
+        if (savedData) {
+            try {
+                candidates = JSON.parse(savedData);
+            } catch (e) {
+                console.error("Error parsing local storage data", e);
+                candidates = [];
+            }
+        }
+        render();
+    };
+
+    // Save to Local Storage instantly
+    function save() {
+        localStorage.setItem('rlls_candidates', JSON.stringify(candidates));
+        render();
+        // Optional visual feedback for manual save
+        const saveBtn = document.querySelector('.btn-save');
+        const originalText = saveBtn.innerHTML;
+        saveBtn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+        setTimeout(() => { saveBtn.innerHTML = originalText; }, 1500);
+    }
+
+    // Modal Engine
+    function customAlert(msg) { document.getElementById('alert-message').innerText = msg; document.getElementById('alert-modal').style.display = 'block'; }
+    let confirmCallback = null;
+    function openCustomConfirm(msg, callback) { document.getElementById('confirm-message').innerText = msg; document.getElementById('confirm-modal').style.display = 'block'; confirmCallback = callback; }
+    document.getElementById('confirm-yes-btn').onclick = function() { if(confirmCallback) confirmCallback(); closeModal('confirm-modal'); }
+    let promptCallback = null;
+    function openCustomPrompt(title, subtitle, placeholder, callback) { document.getElementById('prompt-title').innerText = title; document.getElementById('prompt-subtitle').innerText = subtitle; document.getElementById('prompt-input').placeholder = placeholder; document.getElementById('prompt-input').value = ""; document.getElementById('prompt-modal').style.display = 'block'; promptCallback = callback; }
+    document.getElementById('prompt-submit-btn').onclick = function() { const val = document.getElementById('prompt-input').value; if(promptCallback) promptCallback(val); closeModal('prompt-modal'); }
+    function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+
+    // Core Logic
+    function addCandidate() {
+        const nameInput = document.getElementById('candName');
+        const sourceInput = document.getElementById('candSource');
+        if (!nameInput.value) return customAlert("Please enter a Candidate Name.");
+        candidates.push({ id: Date.now(), name: nameInput.value, source: sourceInput.value, stepIdx: 0, attemptIdx: 0, adpSent: false, champsId: "", interviewTime: "", assignedCounty: "barry", assignedTrainings: [], completedTrainings: [], dueDates: {} });
+        save(); nameInput.value = ""; 
+    }
+
+    function syncCalendly(id) { openCustomPrompt("Sync Calendly", "Enter the scheduled Interview Date and Time.", "e.g., Tuesday @ 2pm", function(time) { if (time) { const c = candidates.find(can => can.id === id); c.interviewTime = time; c.stepIdx = 5; c.attemptIdx = 0; save(); } }); }
+    function handleClean(id) { openCustomPrompt("Clean Record Check", "Enter the CHAMPS ID Application Number below.", "CHAMPS ID #", function(cid) { if(cid) { const c = candidates.find(can => can.id === id); c.champsId = cid; c.assignedTrainings = [...trainingTemplates[c.assignedCounty]]; c.dueDates = c.dueDates || {}; save(); } }); }
+    function deleteCand(id) { openCustomConfirm("Are you sure you want to permanently delete this applicant?", function() { candidates = candidates.filter(can => can.id !== id); save(); }); }
+    function clearAllDataCallback() { candidates = []; save(); }
+
+    function toggleTraining(id, training) { const c = candidates.find(can => can.id === id); if (c.assignedTrainings.includes(training)) c.assignedTrainings = c.assignedTrainings.filter(t => t !== training); else c.assignedTrainings.push(training); save(); }
+    function toggleCompletedTraining(id, training) { const c = candidates.find(can => can.id === id); if (!c.completedTrainings) c.completedTrainings = []; if (c.completedTrainings.includes(training)) c.completedTrainings = c.completedTrainings.filter(t => t !== training); else c.completedTrainings.push(training); save(); }
+    function updateDueDate(id, training, dateVal) { const c = candidates.find(can => can.id === id); c.dueDates = c.dueDates || {}; c.dueDates[training] = dateVal; save(); }
+    function updateCounty(id, county) { const c = candidates.find(can => can.id === id); c.assignedCounty = county; c.assignedTrainings = [...trainingTemplates[county]]; c.dueDates = {}; save(); }
+    
+    function moveFollowUp(id) { const c = candidates.find(can => can.id === id); if (c.attemptIdx < funnelSteps[c.stepIdx].attempts.length - 1) { c.attemptIdx++; save(); } }
+    function nextPhase(id) { const c = candidates.find(can => can.id === id); if (c.stepIdx < funnelSteps.length - 1) { c.stepIdx++; c.attemptIdx = 0; save(); } }
+    function goBack(id) { const c = candidates.find(can => can.id === id); if (c.stepIdx > 0) { c.stepIdx--; c.attemptIdx = 0; save(); } }
+    
+    function handleRecordFound(id) { currentId = id; document.getElementById('record-modal-overlay').style.display = 'block'; }
+    function finishOnboarding(id) { customAlert("Success! Candidate is ready to be cleared for scheduling."); nextPhase(id); }
+
+    function openWelcome(id) {
+        currentId = id;
+        const c = candidates.find(can => can.id === id);
+        const manager = document.getElementById('activeManager').value;
+        const letterText = `DATE: ${new Date().toLocaleDateString()}\n\nDear ${c.name},\n\nOn behalf of the entire team, I am thrilled to welcome you to Real Life Living Services (RLLS)! We are so excited that you have chosen to join our agency and build a rewarding career with us.\n\nYour journey with us will begin with our comprehensive new hire orientation, where you will learn about our company's history, our person-centered philosophy, and the core policies and procedures that guide our work. During this training, we will cover everything you need to know to get started, from understanding your role and responsibilities to the practical skills of using our systems like the AxisCare app for documenting the amazing work you do. To ensure a smooth start, please be prepared to complete your new hire paperwork. You will also receive your personal copy of the RLLS Personnel Policy Manual, which will be a valuable resource for you throughout your employment.\n\nWe believe that support is a two-way street. Just as you will be supporting our clients, we are here to support you. Your direct supervisor will be your primary point of contact and will provide you with ongoing guidance, training, and support to help you succeed and grow professionally. We are confident that you will be an excellent addition to our team. Your compassion and dedication are what make our services possible, and we look forward to seeing the positive contributions you will bring to our consumers and our community.\n\nWelcome to the RLLS family!\n\nSincerely,\n\n${manager}\nManager, Real Life Living Services\n(231) 887-4080`;
+        document.getElementById('letter-body').innerText = letterText;
+        document.getElementById('welcome-modal-overlay').style.display = 'block';
+    }
+
+    function confirmADP() {
+        const c = candidates.find(can => can.id === currentId);
+        c.adpSent = true; save();
+        window.open("https://workforcenow.adp.com/", "_blank");
+        closeModal('welcome-modal-overlay');
+    }
+
+    function generateEmail(id, type) {
+        const c = candidates.find(can => can.id === id);
+        const manager = document.getElementById('activeManager').value || 'Manager';
+        let fullEmailText = "";
+
+        if (type === 'orientation' || type.includes('Follow-up') || type.includes('Refresher') || type === 'All Incomplete Trainings') {
+            const emailField = document.getElementById(`email-${id}`);
+            const email = emailField ? emailField.value : "[Candidate Email]";
+            
+            let countyNameDisplay = c.assignedCounty.toUpperCase();
+            if(c.assignedCounty === 'waiver') countyNameDisplay = "RELIANCE/WAIVER CONTRACTS - ELDERLY";
+            
+            if(!c.completedTrainings) c.completedTrainings = [];
+            
+            let trainingsToInclude = c.assignedTrainings.filter(t => {
+                if (c.completedTrainings.includes(t)) return false; 
+                
+                const text = t.toLowerCase();
+                
+                if (type === 'orientation') {
+                    return text.includes('prior to working') || text.includes('30 day') || text.includes('7 day') || text.includes('time of hire');
+                } else if (type === 'Prior to Working Follow-up') {
+                    return text.includes('prior to working') || text.includes('time of hire');
+                } else if (type === '30 Day Follow-up') {
+                    return text.includes('30 day') || text.includes('7 day');
+                } else if (type === '60 Day Follow-up') {
+                    return text.includes('60 day') || text.includes('90 day');
+                } else if (type === '180 Day Follow-up') {
+                    return text.includes('180 day') || text.includes('6 month');
+                } else if (type === 'Annual Refresher') {
+                    return text.includes('annual') || text.includes('year') || text.includes('365') || text.includes('ongoing') || text.includes('refresher');
+                } else if (type === 'All Incomplete Trainings') {
+                    return true;
+                }
+                return true; 
+            });
+
+            if (trainingsToInclude.length === 0) {
+                return customAlert(`No incomplete trainings match this timeframe!\n\nThey have either already completed the trainings for the '${type}' period, or they have none assigned.`);
+            }
+
+            const trainingList = trainingsToInclude.map(t => `- ${t}`).join('\n');
+            
+            let accountSetupText = "";
+            if (type === 'orientation') {
+                if (c.assignedCounty !== 'network180') {
+                    accountSetupText = `Manager Note: You MUST create their account on Improving MI Practices first before sending this email!\n\nI have created your account for Improving MI Practices.\nUsername: ${email}\nTemporary Password: Reallife2026!\n\n`;
+                } else {
+                    accountSetupText = `I have created your account for Lakeshore LMS.\nUsername: ${email}\nTemporary Password: RLLS1111\n\n`;
+                }
+            }
+            
+            let introText = "";
+            let subjectText = "";
+
+            if (type === 'orientation') {
+                subjectText = `Orientation Invitation - ${c.name}`;
+                introText = `Welcome to RLLS! I am ${manager}, and your initial mandatory training assignments for ${countyNameDisplay} are now ready.`;
+            } else if (type === 'All Incomplete Trainings') {
+                subjectText = `Master Training List Required - ${c.name}`;
+                introText = `Hello ${c.name},\n\nBelow is a master list of all remaining mandatory training assignments for ${countyNameDisplay} that still need to be completed.`;
+            } else {
+                subjectText = `URGENT: ${type} & Trainings Needed - ${c.name}`;
+                introText = `Hello ${c.name},\n\nI am following up regarding your mandatory training assignments for ${countyNameDisplay} that are currently due or past due for your ${type}.`;
+            }
+            
+            fullEmailText = `TO: ${email}\nCC: Staff@rlls.org\nSUBJECT: ${subjectText}\n\n${introText}\n\n${accountSetupText}Dashboard Instructions:\n1. Go to your Staff Welcome Dashboard (Attached).\n2. Scroll down to 'Step 5: Your Training Roadmap'. Click the dropdown menu and select "${countyNameDisplay}".\n\nThis will reveal your specific deadlines, login instructions, and the links needed to complete the following assigned topics:\n\n${trainingList}\n\nPlease let me know if you have any questions!\n\nSincerely,\n\n${manager}\nReal Life Living Services`;
+        } 
+        else if (type === 'explanation') {
+            fullEmailText = `TO: [Candidate Email]\nSUBJECT: URGENT: Employment Action Required - ${c.name}\n\nDear ${c.name},\n\nWe are writing you this letter to express the urgency of a few issues that must be addressed prior to your employment beginning.\n\nRegarding your driving record, you must provide an original, signed document from the Secretary of State regarding the current status of your Michigan Driver’s License. Regarding your criminal history, you must provide a detailed explanation of the criminal history findings and why you are rehabilitated.\n\nPlease note that your conditional job offer is contingent upon the satisfactory completion and approval of all requested materials for your personnel file. Thank you for your prompt attention to this matter.\n\nSincerely,\n\n${manager}\nReal Life Living Services`;
+        }
+        else if (type === 'approval') {
+            fullEmailText = `TO: Bwoodside@rlls.org, Kaley@rlls.org\nSUBJECT: Background Check Clearance Request - ${c.name}\n\nBen & Kaley,\n\nPlease review the attached ICHAT PDF and the candidate's written explanation regarding their background check findings. Let me know if this candidate is approved to proceed with onboarding.\n\nThank you,\n\n${manager}`;
+        }
+        else if (type === 'rejection') {
+            fullEmailText = `TO: [Candidate Email]\nSUBJECT: Employment Update - Real Life Living Services\n\nDear ${c.name},\n\nPer our conversation, Real Life Living Services, Inc. has rescinded the conditional job offer extended to you. As we discussed, our organization has strict policies and procedures relating to job applicants' qualifications and suitability to work with vulnerable adults. Included in these policies are the good moral character standards required of our state licensing officials and funding agencies.\n\nUpon conducting the requisite and routine state police record check on you, we learned of your felony conviction. We then provided you the opportunity to refute the accuracy of the state police record check. You acknowledged that the report was completely accurate and that you were not honest when you completed our job application. We regret that you are not eligible for employment with the organization as you do not meet our standards relative to good moral character.\n\nWe wish you the best in finding a gainful and rewarding position elsewhere.\n\nSincerely,\n\n${manager}\nReal Life Living Services`;
+        }
+
+        const textArea = document.getElementById('email-textarea');
+        textArea.value = fullEmailText;
+        
+        closeModal('record-modal-overlay');
+        document.getElementById('email-modal-overlay').style.display = 'block';
+        executeFailsafeCopy();
+    }
+
+    function executeFailsafeCopy() {
+        const textArea = document.getElementById('email-textarea');
+        textArea.select();
+        textArea.setSelectionRange(0, 99999); 
+        try {
+            const successful = document.execCommand('copy');
+            if (successful) customAlert("✅ Email successfully copied to your clipboard!\n\nYou can now open Roundcube Webmail and paste it.");
+            else customAlert("Auto-copy blocked by browser. Please highlight the text in the box, right-click, and select 'Copy'.");
+        } catch (err) {
+            customAlert("Auto-copy blocked by browser. Please highlight the text in the box, right-click, and select 'Copy'.");
+        }
+    }
+
+    function render() {
+        const body = document.getElementById('tracker-body');
+        body.innerHTML = '';
+        const manager = document.getElementById('activeManager').value || 'Manager';
+        
+        candidates.forEach(c => {
+            const step = funnelSteps[c.stepIdx];
+            let script = step.attempts[c.attemptIdx] ? step.attempts[c.attemptIdx].replace(/\[Name\]/g, c.name).replace(/\[activeManager\]/g, manager).replace(/\{activeManager\}/g, manager) : "N/A";
+            const progressPct = ((c.stepIdx + 1) / funnelSteps.length) * 100;
+            
+            let actionBtn = `<button class="btn btn-next" onclick="nextPhase(${c.id})">Next Phase</button>`;
+            let followUpBtn = `<button class="btn btn-followup" style="margin-top:5px;" onclick="moveFollowUp(${c.id})"><i class="fas fa-comment-dots"></i> Follow Up / Text</button>`;
+            let undoBtn = c.stepIdx > 0 ? `<br><button class="btn btn-undo" style="margin-top:10px;" onclick="goBack(${c.id})"><i class="fas fa-undo"></i> Undo Step</button>` : '';
+            let complianceContent = "";
+
+            if (c.stepIdx === 1) { 
+                if (c.attemptIdx < 3) {
+                    actionBtn = `<button class="btn btn-onboard" onclick="moveFollowUp(${c.id})">Load Next Question (${c.attemptIdx + 2}/4) <i class="fas fa-arrow-right"></i></button>`;
+                    followUpBtn = ''; 
+                } else if (c.attemptIdx === 3) {
+                    actionBtn = `<button class="btn btn-next" onclick="nextPhase(${c.id})">Passed: Next Phase</button>`;
+                    followUpBtn = `<br><button class="btn btn-delete" style="margin-top:8px;" onclick="moveFollowUp(${c.id})">Failed: Move to Inactive</button>`;
+                } else {
+                    actionBtn = `<button class="btn btn-delete" disabled>Inactive File</button>`;
+                    followUpBtn = '';
+                }
+            }
+
+            if (c.stepIdx === 4) actionBtn = `<button class="btn btn-sync" onclick="syncCalendly(${c.id})"><i class="fas fa-calendar-alt"></i> SYNC CALENDLY</button>`;
+            
+            if (c.stepIdx === 6) {
+                actionBtn = `<button class="btn btn-onboard" onclick="openWelcome(${c.id})"><i class="fas fa-paper-plane"></i> SEND WELCOME & ADP</button>`;
+                if (c.adpSent) actionBtn += `<br><button class="btn btn-next" style="background:var(--brand-green); margin-top:8px;" onclick="nextPhase(${c.id})">ADP RETURNED ✓</button>`;
+            }
+
+            if (c.stepIdx === 7) { 
+                actionBtn = `
+                    <button class="btn btn-clean" onclick="handleClean(${c.id})"><i class="fas fa-check-circle"></i> CLEAN BACKGROUND</button>
+                    <br><button class="btn btn-record" style="margin-top:8px;" onclick="handleRecordFound(${c.id})"><i class="fas fa-exclamation-triangle"></i> RECORD FOUND</button>
+                `;
+                
+                let trainingHub = "";
+                if (c.champsId) {
+                    const template = trainingTemplates[c.assignedCounty] || [];
+                    let trainingCheckboxes = template.map(t => `
+                        <li><input type="checkbox" ${c.assignedTrainings.includes(t) ? 'checked' : ''} onchange="toggleTraining(${c.id}, '${t}')"> ${t}</li>
+                    `).join('');
+
+                    trainingHub = `
+                        <div class="training-assignment-box">
+                            <strong style="color:var(--brand-orange);"><i class="fas fa-tasks"></i> 1. Record Cleared! Assign Trainings:</strong><br>
+                            <div style="background: #FFF8E1; padding: 15px; border-left: 4px solid var(--brand-yellow); margin: 15px 0; font-size: 0.95rem; color: #F57F17; border-radius: 4px;">
+                                <strong>⚠️ Manager Step - Improving MI Practices:</strong> If the candidate is a first-time user, <strong>you must create their new account</strong> on <a href="https://improvingmipractices.org/login" target="_blank" style="color: #F57F17; text-decoration: underline;">Login | Improving MI Practices</a> before sending their welcome email!
+                            </div>
+                            <select onchange="updateCounty(${c.id}, this.value)" style="width:100%; margin: 8px 0; border: 1px solid #D7CCC8; padding: 10px; border-radius: 6px; font-family: inherit;">
+                                <option value="barry" ${c.assignedCounty==='barry'?'selected':''}>Barry County</option>
+                                <option value="nlcmh" ${c.assignedCounty==='nlcmh'?'selected':''}>NLCMH</option>
+                                <option value="network180" ${c.assignedCounty==='network180'?'selected':''}>Network180</option>
+                                <option value="waiver" ${c.assignedCounty==='waiver'?'selected':''}>Reliance/Waiver Contracts</option>
+                            </select>
+                            <ul class="training-list">${trainingCheckboxes}</ul>
+                            <div style="display:flex; gap:15px; margin-top:15px;">
+                                <button class="btn btn-next" style="flex:1; padding: 12px;" onclick="nextPhase(${c.id})">Proceed to AxisCare Tracker <i class="fas fa-arrow-right"></i></button>
+                            </div>
+                        </div>`;
+                }
+
+                complianceContent = `
+                    <div class="compliance-hub">
+                        ${c.champsId ? '<b style="color:var(--brand-green); font-size: 1.1rem;"><i class="fas fa-check"></i> CHAMPS ID: '+c.champsId+'</b>' : '<b style="color:var(--brand-red);"><i class="fas fa-spinner fa-spin"></i> CHAMPS ID: Pending</b>'}
+                        <hr style="border: none; border-top: 1px solid #FFCDD2; margin: 12px 0;">
+                        <a href="https://apps.michigan.gov/" target="_blank" class="comp-link">1. ICHAT</a>  
+                        <a href="https://mdocweb.state.mi.us/OTIS2/otis2.aspx" target="_blank" class="comp-link">2. OTIS</a>  
+                        <a href="http://www.nsopw.gov" target="_blank" class="comp-link">3. NSOPW</a>  
+                        <a href="https://auth.yeiservices.com/r/login.html" target="_blank" class="comp-link">4. EPStaff</a>  
+                        <a href="https://milogintp.michigan.gov/eai/tplogin/authenticate?URL=/dch-apps/mcir/wicket/wicket/bookmarkable/gov.mi.mdch.mcir.message.web.NewsPopup" target="_blank" class="comp-link">5. CHAMPS</a>
+                        ${trainingHub}
+                    </div>`;
+            }
+
+            if (c.stepIdx === 8) {
+                actionBtn = `<button class="btn btn-axiscare" style="padding: 12px;" onclick="window.open('https://14176.axiscare.com', '_blank')"><i class="fas fa-external-link-alt"></i> OPEN AXISCARE</button>`;
+                
+                if(!c.completedTrainings) c.completedTrainings = [];
+                if(!c.dueDates) c.dueDates = {};
+                
+                const ptwRequirements = priorToWorkingMap[c.assignedCounty] || [];
+                let allPtwMet = true;
+
+                let trackingList = c.assignedTrainings.map(t => {
+                    let isPtw = ptwRequirements.includes(t);
+                    let checked = c.completedTrainings.includes(t) ? 'checked' : '';
+                    let dateVal = c.dueDates[t] || '';
+                    
+                    if (isPtw && !checked) allPtwMet = false; 
+                    
+                    let labelStyle = isPtw ? "color: var(--brand-red); font-weight: 800;" : "color: var(--text-main);";
+                    let badgeHtml = isPtw ? `<span class="ptw-badge">PRIOR TO WORKING</span>` : "";
+
+                    return `<li>
+                                <div style="display:flex; align-items:center;">
+                                    <input type="checkbox" ${checked} onchange="toggleCompletedTraining(${c.id}, '${t}')"> 
+                                    <span style="${labelStyle}; margin-left:8px;">${t}</span> ${badgeHtml}
+                                </div>
+                                <div style="display:flex; align-items:center; gap: 8px;">
+                                    <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">Due:</span>
+                                    <input type="date" class="date-input" value="${dateVal}" onchange="updateDueDate(${c.id}, '${t}', this.value)">
+                                </div>
+                            </li>`;
+                }).join('');
+
+                let finalButton = allPtwMet 
+                    ? `<button class="btn btn-clean" style="width:100%; margin-top:20px; padding:15px; font-size: 1rem;" onclick="finishOnboarding(${c.id})"><i class="fas fa-check-double"></i> ALL 'PRIOR TO WORKING' LOGGED: CLEAR FOR SCHEDULE</button>`
+                    : `<button class="btn" style="width:100%; margin-top:20px; padding:15px; background: #E0E0E0; color: #9E9E9E; cursor: not-allowed; font-size: 0.95rem;" disabled><i class="fas fa-ban"></i> MUST COMPLETE 'PRIOR TO WORKING' TRAININGS FIRST</button>`;
+
+                let successBox = allPtwMet 
+                    ? `<div style="background: #E8F5E9; padding: 18px; border-left: 5px solid var(--brand-green); margin-top: 15px; border-radius: 6px; box-shadow: 0 2px 8px rgba(46, 125, 50, 0.1);">
+                        <strong style="color: var(--brand-green); font-size: 1.1rem;">🎉 Congratulations on your new hire!</strong>
+                        <p style="font-size: 0.95rem; margin: 8px 0; color: var(--text-main);">Once the required trainings are completed, you can proceed with scheduling and delete this candidate from the list.</p>
+                       </div>`
+                    : '';
+
+                complianceContent = `
+                    <div class="axiscare-tracker">
+                        <strong style="color:var(--brand-orange); font-size: 1.1rem;"><i class="fas fa-graduation-cap"></i> Training Communication & Tracking:</strong>
+                        
+                        <div style="background: #FFFFFF; padding: 15px; border: 1px solid var(--border-soft); border-radius: 8px; margin: 15px 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+                            <label style="font-size: 0.85rem; font-weight:800; color: var(--text-main);">Staff Email Address:</label>
+                            <input type="email" id="email-${c.id}" placeholder="staff.email@rlls.org" style="width:100%; padding:10px; margin-top: 8px; border: 1px solid #D7CCC8; border-radius: 6px; font-size: 0.9rem; font-family: inherit;">
+                            
+                            <div style="display:flex; gap:15px; margin-top:15px;">
+                                <select id="letterType-${c.id}" style="flex: 2; padding: 10px; border: 1px solid #D7CCC8; border-radius: 6px; font-size: 0.9rem; font-family: inherit;">
+                                    <option value="orientation">Initial Orientation (First 30 Days)</option>
+                                    <option value="Prior to Working Follow-up">Prior to Working Follow-up</option>
+                                    <option value="30 Day Follow-up">30 Day Follow-up</option>
+                                    <option value="60 Day Follow-up">60 Day Follow-up</option>
+                                    <option value="180 Day Follow-up">180 Day Follow-up</option>
+                                    <option value="Annual Refresher">Annual Refresher</option>
+                                    <option value="All Incomplete Trainings">All Incomplete Trainings (Master List)</option>
+                                </select>
+                                <button class="btn btn-onboard" style="flex:1; padding: 10px;" onclick="generateEmail(${c.id}, document.getElementById('letterType-${c.id}').value)"><i class="fas fa-envelope-open-text"></i> Generate Email</button>
+                            </div>
+                        </div>
+
+                        <p style="font-size:0.85rem; color:var(--text-muted); margin-top: 20px; font-weight: 600;">Set Due Dates and Check off when certificates are uploaded to AxisCare.</p>
+                        <ul class="tracker-list">${trackingList}</ul>
+                        ${finalButton}
+                        ${successBox}
+                        <button class="btn" style="width:100%; margin-top:15px; padding:12px; background:#8D6E63; color:white;" onclick="goBack(${c.id})"><i class="fas fa-arrow-left"></i> Incorrect Training? Go Back to Edit Assignments</button>
+                    </div>
+                `;
+            }
+            
+            let badgeText = "Script";
+            if (c.stepIdx === 1) {
+                badgeText = ["Q1", "Q2", "Q3", "Q4", "Inactive Note"][c.attemptIdx] || "Script";
+            } else if (step.attempts.length > 1) {
+                if (c.attemptIdx === step.attempts.length - 1) badgeText = "Inactive Note";
+                else badgeText = ["1st", "2nd", "Last Call"][c.attemptIdx] || "Script";
+            }
+
+            body.innerHTML += `<tr>
+                <td style="width: 45%;">
+                    <strong style="font-size: 1.1rem; color: var(--brand-red);">${c.name}</strong><br>
+                    <span style="font-size:0.85rem; color:var(--text-muted); font-weight: 600;">Source: ${c.source || 'Unknown'}</span>
+                    <div class="progress-container"><div class="progress-fill" style="width: ${progressPct}%"></div></div>
+                    ${c.interviewTime && c.stepIdx < 9 ? '<span class="status-tag"><i class="far fa-calendar-alt"></i> '+c.interviewTime+'</span>' : ''}
+                    ${complianceContent}
+                </td>
+                <td style="min-width: 140px;"><span style="display: inline-block; background: var(--brand-yellow-light); color: #F57F17; font-size:0.85rem; font-weight: 800; padding: 8px 12px; border-radius: 6px; border: 1px solid #FFE082; white-space: nowrap;">${step.name}</span></td>
+                <td style="width: 30%;">
+                    <div class="script-box">
+                        <div class="script-header">
+                            <span class="attempt-badge">${badgeText}</span>
+                            <button class="copy-btn" onclick="navigator.clipboard.writeText(\`${script}\`); customAlert('Copied to clipboard!')"><i class="far fa-copy"></i> COPY</button>
+                        </div>
+                        <div>${script}</div>
+                    </div>
+                </td>
+                <td style="width: 15%;">${actionBtn}<br>${followUpBtn}${undoBtn}</td>
+                <td style="text-align: center;"><button class="btn btn-delete" style="padding: 10px 15px;" onclick="deleteCand(${c.id})"><i class="fas fa-trash-alt"></i></button></td>
+            </tr>`;
+        });
+    }
+    
+    document.getElementById('activeManager').addEventListener('input', render);
+</script>
+</body>
+</html>
