@@ -306,7 +306,7 @@
     <div class="modal-content">
         <h2 style="color: var(--brand-orange); font-size:1.8rem; font-weight:800; margin-top:0;">Roundcube Email Generator</h2>
         <p style="font-size: 0.95rem; color: var(--text-muted);">Review the generated email below. Click the green button to try copying, or simply highlight the text, right-click, and select "Copy".</p>
-        <textarea id="email-textarea" class="email-textarea" readonly></textarea>
+        <div id="email-textarea" class="email-textarea" contenteditable="true" style="overflow-y: auto; background: #fff;"></div>
         <div style="margin-top:15px; display: flex; gap: 15px;">
             <button class="btn btn-clean" style="padding: 14px; flex: 2; font-size: 1.05rem;" onclick="executeFailsafeCopy()"><i class="fas fa-copy"></i> Copy Text to Clipboard</button>
             <button class="btn btn-followup" style="padding: 14px; flex: 1;" onclick="closeModal('email-modal-overlay')">Close Window</button>
