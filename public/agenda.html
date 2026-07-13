@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RLLS Daily Agenda Generator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --rlls-blue: #1a4a7c;
+            --rlls-teal: #2fb5b3;
+            --bg-light: #f4f7f6;
+            --rlls-orange: #ff9800;
+            --text-dark: #333;
+            --border-color: #ddd;
+        }
+
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg-light); color: var(--text-dark); margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .flex-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--rlls-teal); padding-bottom: 10px; margin-bottom: 20px; }
+        h1 { color: var(--rlls-blue); margin: 0; font-size: 1.8rem; }
+        
+        .header-actions { display: flex; gap: 15px; }
+        .btn-nav { background: var(--rlls-blue); color: white; padding: 10px 15px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+        .btn-nav:hover { background: var(--rlls-teal); }
+
+        .section-box { background: #fdfdfd; border: 1px solid var(--border-color); padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .section-title { font-size: 1.1rem; color: var(--rlls-blue); font-weight: bold; margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        
+        .form-row { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; flex-wrap: wrap; }
+        .form-row label { font-weight: bold; font-size: 0.9rem; }
+        select, input[type="text"], input[type="number"], textarea { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9rem; width: 100%; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif;}
+        select { width: auto; min-width: 150px; }
+        textarea { resize: vertical; min-height: 80px; }
+        
+        .checkbox-group { display: flex; gap: 20px; flex-wrap: wrap; }
+        .checkbox-label { display: flex; align-items: center; gap: 5px; font-size: 0.9rem; cursor: pointer; }
+        
+        table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+        th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; }
+        th { font-size: 0.8rem; color: #666; text-transform: uppercase; }
+        td input[type="text"], td select { padding: 8px; width: 100%; margin: 0; }
+        
+        .btn { padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem; transition: 0.3s; }
+        .btn-add { background: #eef2f7; color: var(--rlls-blue); border: 1px dashed var(--rlls-blue); width: 100%; margin-top: 5px; }
+        .btn-add:hover { background: #e2eaf3; }
+        .btn-del { background: #ff4d4d; color: white; padding: 6px 10px; border-radius: 4px; border: none; cursor: pointer; font-size: 0.8rem;}
+        
+        .output-box { background: #1e293b; padding: 20px; border-radius: 8px; margin-top: 30px; border-left: 5px solid var(--rlls-teal); }
+        .output-box h3 { color: white; margin-top: 0; margin-bottom: 10px; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center;}
+        #promptOutput { width: 100%; height: 350px; background: #0f172a; color: #38bdf8; padding: 15px; border: 1px solid #334155; border-radius: 6px; font-family: monospace; font-size: 0.95rem; line-height: 1.5; resize: vertical; box-sizing: border-box; }
+        
+        .btn-copy { background: var(--rlls-teal); color: white; padding: 10px 20px; font-size: 1rem; margin-top: 15px; width: 100%; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn-copy:hover { background: #249190; }
+
+        .note-text { font-size: 0.8rem; color: #777; margin-top: 5px; font-style: italic; }
+        .hourly-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="flex-header">
+        <h1>RLLS Manager Daily Agenda Planner</h1>
+        <div class="header-actions">
+            <a href="index.html" class="btn-nav"><i class="fas fa-users"></i> Back to Onboarding</a>
+        </div>
+    </div>
+
+    <div class="section-box">
+        <div class="form-row">
+            <label for="checkInTime">Current Check-in Time:</label>
+            <select id="checkInTime" onchange="generatePrompt()">
+                <option value="9:00 AM">9:00 AM</option>
+                <option value="10:00 AM">10:00 AM</option>
+                <option value="11:00 AM">11:00 AM</option>
+                <option value="1:00 PM">1:00 PM</option>
+                <option value="2:00 PM">2:00 PM</option>
+                <option value="3:00 PM">3:00 PM</option>
+            </select>
+            <label for="managerName" style="margin-left: 20px;">Manager Name:</label>
+            <input type="text" id="managerName" value="Kaley Weaver" placeholder="Name" oninput="generatePrompt()" style="width: 200px;">
+        </div>
+        <p class="section-title" style="margin-top:20px; border:none; padding:0;">9:00 AM Launch Checklist</p>
+        <div class="checkbox-group">
+            <label class="checkbox-label"><input type="checkbox" id="clockInCheck" class="routine-check" onchange="generatePrompt()"> Clocked in on Teams & Timesheet Filled</label>
+        </div>
+    </div>
+
+    <div class="section-box" style="background-color: #e8f4f8; border-color: #b3d4e5;">
+        <h3 class="section-title" style="border-bottom: none; margin-bottom: 5px;">Gmail & Task Inbox</h3>
+        <p style="font-size: 0.9rem; margin: 0; color: #1a4a7c;"><strong>Automated Step:</strong> You do not need to paste emails here. The generated prompt will automatically instruct Gemini to read your connected Gmail inbox to add tasks and create template responses.</p>
+    </div>
+
+    <div class="section-box">
+        <h3 class="section-title">QUE App: Call-in's & Schedule Changes (< 24h)</h3>
+        <p class="note-text">If NO changes, leave blank. If YES, Gemini will draft template responses for these.</p>
+        <table id="callInTable">
+            <thead>
+                <tr>
+                    <th style="width:25%">Staff Name</th>
+                    <th style="width:25%">Client Name</th>
+                    <th style="width:25%">Today's Shift</th>
+                    <th style="width:15%; text-align:center;">Updated AxisCare</th>
+                    <th style="width:10%"></th>
+                </tr>
+            </thead>
+            <tbody id="callInBody"></tbody>
+        </table>
+        <button class="btn btn-add" onclick="addRow('callInBody', 'callin')">+ Add Call-in/Change</button>
+    </div>
+
+    <div class="section-box">
+        <h3 class="section-title">AxisCare: Visit Requests</h3>
+        <table id="visitTable">
+            <thead>
+                <tr>
+                    <th style="width:50%">Staff Name (Requested Shift)</th>
+                    <th style="width:30%">Action Taken</th>
+                    <th style="width:10%"></th>
+                </tr>
+            </thead>
+            <tbody id="visitBody"></tbody>
+        </table>
+        <button class="btn btn-add" onclick="addRow('visitBody', 'visit')">+ Add Visit Request</button>
+    </div>
+
+    <div class="section-box">
+        <h3 class="section-title">Open Shifts Tracker</h3>
+        <p style="font-weight:bold; font-size:0.9rem; margin-bottom:5px;">Tomorrow & Weekend Open Shifts</p>
+        <table id="shiftsFutureTable">
+            <thead><tr><th style="width:40%">Client Name</th><th style="width:25%">Date</th><th style="width:25%">Time</th><th></th></tr></thead>
+            <tbody id="shiftsFutureBody"></tbody>
+        </table>
+        <button class="btn btn-add" onclick="addRow('shiftsFutureBody', 'shift')">+ Add Open Shift (Tomorrow/Weekend)</button>
+    </div>
+
+    <div class="section-box" style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 300px;">
+            <h3 class="section-title">Recruiting & Onboarding</h3>
+            <p class="note-text">Notes from RLLS Onboarding Dashboard.</p>
+            <textarea id="recruiting" placeholder="Follow up notes..." oninput="generatePrompt()"></textarea>
+        </div>
+        <div style="flex: 1; min-width: 300px;">
+            <h3 class="section-title">Calls</h3>
+            <p class="note-text">Notes from Call Log Dashboard.</p>
+            <textarea id="calls" placeholder="Call notes..." oninput="generatePrompt()"></textarea>
+        </div>
+    </div>
+
+    <div class="section-box" style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 300px;">
+            <h3 class="section-title">Visit Verifications (Yesterday)</h3>
+            <label style="font-size:0.9rem; font-weight:bold;">Total visits left to verify:</label>
+            <input type="number" id="visitsToVerify" placeholder="0" oninput="generatePrompt()" style="margin-top:5px; margin-bottom: 10px;">
+            <p class="note-text" style="margin-top:0;">Staff needing contact for corrections or training:</p>
+            <textarea id="visitCorrections" placeholder="Staff Name | Issue..." oninput="generatePrompt()"></textarea>
+        </div>
+        <div style="flex: 1; min-width: 300px;">
+            <h3 class="section-title">Training & Eval Tracking</h3>
+            <p class="note-text">Staff with credentials due or upcoming (Gemini will draft emails for these):</p>
+            <textarea id="credentialTracking" placeholder="Staff Name | Credential | Due Date" oninput="generatePrompt()"></textarea>
+        </div>
+    </div>
+
+    <div class="section-box">
+        <h3 class="section-title">Hourly Operations Log</h3>
+        <p class="note-text">Log notes, fires put out, and pending items here throughout the day.</p>
+        <div class="hourly-grid">
+            <div><label>10:00 AM Update</label><textarea id="u10" oninput="generatePrompt()"></textarea></div>
+            <div><label>11:00 AM Update</label><textarea id="u11" oninput="generatePrompt()"></textarea></div>
+            <div><label>1:00 PM Update</label><textarea id="u1" oninput="generatePrompt()"></textarea></div>
+            <div><label>2:00 PM Update</label><textarea id="u2" oninput="generatePrompt()"></textarea></div>
+            <div style="grid-column: 1 / -1;"><label>3:00 PM EOD Wrap-up</label><textarea id="u3" oninput="generatePrompt()"></textarea></div>
+        </div>
+    </div>
+
+    <div class="output-box">
+        <h3>✨ Generated Gemini Prompt</h3>
+        <p style="color:#94a3b8; font-size:0.85rem; margin-top:-5px; margin-bottom:15px;">This prompt updates automatically as you type. Click copy and paste it directly into Gemini.</p>
+        <textarea id="promptOutput" readonly></textarea>
+        <button class="btn btn-copy" onclick="copyToClipboard()">📋 Copy Prompt to Clipboard</button>
+    </div>
+
+</div>
+
+<script>
+    function addRow(tbodyId, type) {
+        const tbody = document.getElementById(tbodyId);
+        const tr = document.createElement('tr');
+        
+        if (type === 'callin') {
+            tr.innerHTML = `
+                <td><input type="text" class="ci-staff" placeholder="Staff Name" oninput="generatePrompt()"></td>
+                <td><input type="text" class="ci-client" placeholder="Client Name" oninput="generatePrompt()"></td>
+                <td><input type="text" class="ci-shift" placeholder="Shift Time" oninput="generatePrompt()"></td>
+                <td style="text-align:center;"><input type="checkbox" class="ci-updated" onchange="generatePrompt()"></td>
+                <td><button class="btn btn-del" onclick="this.closest('tr').remove(); generatePrompt()">X</button></td>
+            `;
+        } else if (type === 'visit') {
+            tr.innerHTML = `
+                <td><input type="text" class="vr-staff" placeholder="Staff Name / Shift" oninput="generatePrompt()"></td>
+                <td>
+                    <select class="vr-status" onchange="generatePrompt()">
+                        <option value="Accepted">Accepted</option>
+                        <option value="Denied">Denied</option>
+                        <option value="Pending">Pending</option>
+                    </select>
+                </td>
+                <td><button class="btn btn-del" onclick="this.closest('tr').remove(); generatePrompt()">X</button></td>
+            `;
+        } else if (type === 'shift') {
+            tr.innerHTML = `
+                <td><input type="text" class="os-who" placeholder="Client Name" oninput="generatePrompt()"></td>
+                <td><input type="text" class="os-date" placeholder="Date" oninput="generatePrompt()"></td>
+                <td><input type="text" class="os-time" placeholder="Time" oninput="generatePrompt()"></td>
+                <td><button class="btn btn-del" onclick="this.closest('tr').remove(); generatePrompt()">X</button></td>
+            `;
+        }
+        tbody.appendChild(tr);
+        generatePrompt();
+    }
+
+    function generatePrompt() {
+        const time = document.getElementById('checkInTime').value;
+        const manager = document.getElementById('managerName').value || "[Name]";
+        const isClockedIn = document.getElementById('clockInCheck').checked ? "Completed" : "Not Completed";
+
+        // Build Call Ins
+        let callInsText = "";
+        const callInRows = document.querySelectorAll('#callInBody tr');
+        if (callInRows.length === 0) {
+            callInsText = "No Call-Ins or Schedule Changes.";
+        } else {
+            callInRows.forEach(row => {
+                const staff = row.querySelector('.ci-staff').value || "[No Name]";
+                const client = row.querySelector('.ci-client').value || "[No Client]";
+                const shift = row.querySelector('.ci-shift').value || "[No Shift]";
+                const updated = row.querySelector('.ci-updated').checked ? "YES" : "NO";
+                callInsText += `- Staff: ${staff} | Client: ${client} | Shift: ${shift} | AxisCare Updated & Logged: ${updated}\n`;
+            });
+        }
+
+        // Build Visit Requests
+        let visitsText = "";
+        const visitRows = document.querySelectorAll('#visitBody tr');
+        if (visitRows.length === 0) {
+            visitsText = "No pending visit requests.";
+        } else {
+            visitRows.forEach(row => {
+                const staff = row.querySelector('.vr-staff').value || "[No Name]";
+                const status = row.querySelector('.vr-status').value;
+                visitsText += `- ${staff}: ${status}\n`;
+            });
+        }
+
+        // Build Open Shifts
+        let shiftsFutureText = "";
+        const futureRows = document.querySelectorAll('#shiftsFutureBody tr');
+        if (futureRows.length === 0) {
+            shiftsFutureText = "No open shifts tomorrow/weekend.";
+        } else {
+            futureRows.forEach(row => {
+                const who = row.querySelector('.os-who').value || "[Blank]";
+                const date = row.querySelector('.os-date').value || "[Blank]";
+                const timeStr = row.querySelector('.os-time').value || "[Blank]";
+                shiftsFutureText += `- ${who} | ${date} | ${timeStr}\n`;
+            });
+        }
+
+        // Textareas and Inputs
+        const recruiting = document.getElementById('recruiting').value.trim() || "None.";
+        const calls = document.getElementById('calls').value.trim() || "None.";
+        const visitsToVerify = document.getElementById('visitsToVerify').value || "0";
+        const visitCorrections = document.getElementById('visitCorrections').value.trim() || "None.";
+        const credentialTracking = document.getElementById('credentialTracking').value.trim() || "None.";
+        const u10 = document.getElementById('u10').value.trim() || "None.";
+        const u11 = document.getElementById('u11').value.trim() || "None.";
+        const u1 = document.getElementById('u1').value.trim() || "None.";
+        const u2 = document.getElementById('u2').value.trim() || "None.";
+        const u3 = document.getElementById('u3').value.trim() || "None.";
+
+        // Assemble Final Prompt String
+        const promptString = `Act as my operational assistant and Operations Director. It is currently ${time}. Manager: ${manager}.
+
+CRITICAL INSTRUCTION: My Agenda is not to be cleared until explicitly confirmed for delete.
+
+Here is my raw operational data for this check-in:
+
+[9AM LAUNCH]
+- Teams Clock-in & Timesheet: ${isClockedIn}
+
+[QUE APP: CALL-INS & CHANGES <24h]
+${callInsText}
+
+[AXISCARE: VISIT REQUESTS]
+${visitsText}
+
+[OPEN SHIFTS TOMORROW/WEEKEND]
+${shiftsFutureText}
+
+[RECRUITING & ONBOARDING NOTES]
+${recruiting}
+
+[CALL LOG NOTES]
+${calls}
+
+[VISIT VERIFICATIONS]
+- Remaining to Verify from Yesterday: ${visitsToVerify}
+- Staff Needing Corrections/Training: ${visitCorrections}
+
+[TRAINING & EVAL TRACKING]
+- Credentials Due/Upcoming: ${credentialTracking}
+
+[HOURLY OPERATIONS LOG]
+10:00 AM: ${u10}
+11:00 AM: ${u11}
+1:00 PM: ${u1}
+2:00 PM: ${u2}
+3:00 PM: ${u3}
+
+BASED ON THIS DATA, PLEASE PROVIDE:
+1. Synthesize the completed tasks from the notes above.
+2. Access and read my recent emails directly from my connected Gmail account. Tell me what can be deleted, give me template responses for the important ones, and add necessary tasks to my agenda.
+3. Review the "QUE" App call-ins and provide template responses for them.
+4. Review the "Training & Eval Tracking" section and draft short email reminders to any staff listed as having due/upcoming credentials.
+5. Provide a quick follow-up plan or templates for contacting the staff who need visit corrections.
+6. Generate a comprehensive To-Do list / Agenda for the remainder of my shift based on emails, open shifts, verifications, and my hourly notes.`;
+
+        document.getElementById('promptOutput').value = promptString;
+    }
+
+    function copyToClipboard() {
+        const copyText = document.getElementById("promptOutput");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        
+        try {
+            document.execCommand("copy");
+            alert("Prompt copied! Open Gemini and paste it in.");
+        } catch (err) {
+            alert("Oops, unable to copy. Please select the text and copy manually.");
+        }
+    }
+
+    // Initialize prompt on load
+    window.onload = function() {
+        generatePrompt();
+        addRow('callInBody', 'callin');
+        addRow('visitBody', 'visit');
+        addRow('shiftsFutureBody', 'shift');
+    };
+</script>
+
+</body>
+</html>
